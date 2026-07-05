@@ -39,7 +39,7 @@
 **전역 설치 권장** — 넥스트스텝 미션 저장소가 여러 개 생기므로, 어디서든 쓸 수 있게 사용자 전역 스킬 디렉토리에 둡니다.
 
 ```bash
-git clone https://github.com/{your-id}/nextstep-claude-skills.git
+git clone https://github.com/parkchu/nextstep-claude-skills.git
 mkdir -p ~/.claude/skills
 cp -R nextstep-claude-skills/skills/* ~/.claude/skills/
 ```
