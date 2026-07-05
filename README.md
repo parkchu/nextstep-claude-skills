@@ -1,0 +1,69 @@
+# nextstep-claude-skills
+
+[넥스트스텝(NextStep)](https://edu.nextstep.camp) 미션의 Git/GitHub 절차를 도와주는 [Claude Code](https://claude.com/claude-code) 스킬 모음입니다.
+
+넥스트스텝 미션은 fork → 아이디 브랜치 기준 작업 → PR → merge 후 upstream 동기화라는, 처음엔 꽤 헷갈리는 Git 절차를 요구합니다. 이 스킬들은 그 절차에서 **본인 아이디·저장소 이름 같은 빈칸을 Claude가 직접 읽어 채우고**, 위험한 명령은 확인을 받으며 진행해 줍니다.
+
+## 스킬 4개와 미션 흐름
+
+```
+┌─ 미션 시작 ─────────────────────────────────────────────┐
+│                                                          │
+│  nextstep-start    fork · clone · 최초 브랜치(step1) 생성  │
+│        │                                                 │
+│        ▼                                                 │
+│     구현 (직접)  ◀──────────────────────────┐             │
+│        │                                   │             │
+│        ▼                                   │             │
+│  nextstep-check   미션 조건 충족 여부 체크리스트│             │
+│        │                                   │             │
+│        ▼                                   │             │
+│   커밋 → nextstep-pr   push + PR 생성 링크   │             │
+│        │                                   │             │
+│        ▼  (리뷰 → merge 후)                 │             │
+│  nextstep-advance   upstream 동기화 +       │             │
+│                     다음 step 브랜치 생성 ────┘             │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
+
+| 스킬 | 언제 | 하는 일 |
+|------|------|---------|
+| **nextstep-start** | 새 미션을 처음 시작할 때 | fork+clone(gh CLI, 없으면 브라우저 폴백), upstream remote 세팅, 아이디 브랜치 확인, 최초 작업 브랜치(step1) 생성 |
+| **nextstep-check** | 구현 중·커밋 전 수시로 | 붙여넣은 미션 요구사항을 diff와 대조해 조건별 ✅충족/❌미충족/⏸판단보류 체크리스트로 피드백 |
+| **nextstep-pr** | 단계 구현을 마쳤을 때 | push 후 base(본인 아이디 브랜치)/head가 미리 연결된 PR 생성 링크 제공. 제목·본문·PR 생성은 본인이 |
+| **nextstep-advance** | PR이 merge된 뒤 | 끝난 브랜치 정리, upstream fetch·rebase 동기화, 다음 step 브랜치 생성. 충돌 해결 절차 포함 |
+
+## 설치
+
+**전역 설치 권장** — 넥스트스텝 미션 저장소가 여러 개 생기므로, 어디서든 쓸 수 있게 사용자 전역 스킬 디렉토리에 둡니다.
+
+```bash
+git clone https://github.com/{your-id}/nextstep-claude-skills.git
+mkdir -p ~/.claude/skills
+cp -R nextstep-claude-skills/skills/* ~/.claude/skills/
+```
+
+특정 저장소에서만 쓰려면 그 저장소의 `.claude/skills/`에 복사해도 됩니다.
+
+## 사용법
+
+Claude Code 대화에서 자연어로 요청하면 해당 스킬이 자동으로 잡힙니다. 스킬 이름을 직접 말해도 됩니다.
+
+- "자동차 경주 미션 시작하려는데 저장소 세팅해줘" → **nextstep-start**
+- "미션 조건 붙여넣을게, 충족했는지 확인해줘" (+ 요구사항 텍스트/캡처) → **nextstep-check**
+- "이번 단계 끝냈어, 리뷰 요청 보내줘" → **nextstep-pr**
+- "merge 됐어, 다음 step 브랜치 만들어줘" → **nextstep-advance**
+
+## 필요한 것
+
+- [Claude Code](https://claude.com/claude-code)
+- [gh CLI](https://cli.github.com) (권장 — 없어도 브라우저 fork 안내로 폴백합니다)
+- 넥스트스텝 웹의 **`미션 시작`**·**`리뷰 요청`** 버튼은 스킬이 대신 눌러줄 수 없습니다. 스킬이 시점마다 안내하니 직접 누르면 됩니다.
+
+## 설계 원칙
+
+- **빈칸은 Claude가 채운다**: 본인 아이디, 저장소 이름, base 브랜치를 외울 필요 없이 `git remote -v` 등에서 자동 추출합니다.
+- **위험한 명령은 확인 후 실행**: `push`, `rebase`, `reset --hard`, `branch -D`는 실행 전에 무엇을 하는지 알리고 동의를 받습니다.
+- **재실행 안전**: 이미 fork/clone돼 있으면 지우거나 덮어쓰지 않고 재사용해 이어서 진행합니다.
+- **각 스킬은 자기 책임까지만**: 코드 구현·수정, 커밋 메시지, PR 제목·본문은 학습을 위해 본인 몫으로 남깁니다.
