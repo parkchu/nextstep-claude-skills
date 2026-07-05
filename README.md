@@ -50,10 +50,15 @@ cp -R nextstep-claude-skills/skills/* ~/.claude/skills/
 
 Claude Code 대화에서 자연어로 요청하면 해당 스킬이 자동으로 잡힙니다. 스킬 이름을 직접 말해도 됩니다.
 
-- "자동차 경주 미션 시작하려는데 저장소 세팅해줘" → **nextstep-start**
+- "https://github.com/next-step/java-racingcar 미션 시작하려는데 저장소 세팅해줘" → **nextstep-start**
 - "미션 조건 붙여넣을게, 충족했는지 확인해줘" (+ 요구사항 텍스트/캡처) → **nextstep-check**
 - "이번 단계 끝냈어, 리뷰 요청 보내줘" → **nextstep-pr**
 - "merge 됐어, 다음 step 브랜치 만들어줘" → **nextstep-advance**
+
+**nextstep-start 사용 시 알아둘 것**
+
+- **미션 저장소 주소가 필요합니다.** 넥스트스텝 미션 페이지에 있는 GitHub 저장소 URL(예: `https://github.com/next-step/java-racingcar`)을 함께 알려주세요. 안 알려주면 스킬이 어느 미션인지 물어봅니다.
+- **clone 위치는 Claude Code를 실행한 현재 디렉토리 바로 아래**(`./저장소이름`)입니다. 위치를 따로 묻지 않으니, 미션 저장소들을 모아둘 디렉토리에서 실행하세요.
 
 ## 필요한 것
 
